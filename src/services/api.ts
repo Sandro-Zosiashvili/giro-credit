@@ -1,11 +1,13 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
-export async function apiGet(endpoint: string) {
+export async function apiGet<T = any>(endpoint: string): Promise<T> {
     try {
-        const res = await axios.get(`'https://fakestoreapi.com/${endpoint}`);
-        console.log(res.data)
+        const res = await axios.get<T>(`https://fakestoreapi.com/${endpoint}`);
+        console.log(res.data);
         return res.data;
-    } catch (error: any) {
-        throw new Error(error.response?.data?.message || "API GET request failed");
+    } catch (error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        throw new Error(axiosError.response?.data?.message || "API GET request failed");
     }
 }
+// დროებით ესე იყოს
